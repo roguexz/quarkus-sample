@@ -1,0 +1,49 @@
+# ----------------
+# Build Artifacts
+# ----------------
+
+*.class
+*.war
+*.ear
+*.jar
+temp_*
+tmp_*
+*.log*
+target/
+*_cache
+.tmp/
+stash
+/build/
+
+# ----------------------
+# Intellij Project Files
+# ----------------------
+.idea/
+*.iml
+out/
+
+# ----------------------
+# Gradle Artifacts
+# ----------------------
+.gradle/
+tmp/
+.gradle
+
+# ---------------------
+# Eclipse Project Files
+# ---------------------
+.classpath
+.settings
+.project
+
+# -------------------
+# OS X Specific Files
+# -------------------
+.DS_Store
+
+# ----------
+# Exceptions
+# ----------
+
+!/gradle/wrapper/gradle-wrapper.jar
+!/libs/*.jar
