@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-apply plugin: 'java-library'
+package io.rogue.playground.quarkus.another;
 
-dependencies {
-    implementation project(':quarkus-sample-client-library')
-    implementation project(':quarkus-sample-another-library')
-    implementation 'io.quarkus:quarkus-rest-client'
-}
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-task hello() {
-    doLast {
-        Configuration cfg = project.configurations['compileClasspath']
-        Set<ResolvedArtifact> resolvedArtifacts = cfg.resolvedConfiguration.resolvedArtifacts
-        resolvedArtifacts.findAll { it.name == 'main' }
-                .each { a ->
-                    println a.name + ' : ' + a
-                }
-    }
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
+@Path("/anotherEndPoint")
+@RegisterRestClient(configKey = "anotherEndPoint")
+public interface AnotherEndPoint {
+
+    @Path("/someOp")
+    @POST
+    void doSomething();
+
 }

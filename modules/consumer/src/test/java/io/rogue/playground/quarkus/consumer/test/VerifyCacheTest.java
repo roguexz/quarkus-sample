@@ -33,5 +33,9 @@ public class VerifyCacheTest {
     @Test
     public void verifyCacheReference() {
         assertNotNull(cache, "Bean injection isn't working as expected.");
+        assertNotNull(cache.getEndPoint(), "Endpoint should not be null.");
+        assertNotNull(cache.getAnotherEndPoint(), "Endpoint should not be null.");
+        System.err.println(cache.getEndPoint());
+        System.err.println(cache.getAnotherEndPoint());
     }
 }

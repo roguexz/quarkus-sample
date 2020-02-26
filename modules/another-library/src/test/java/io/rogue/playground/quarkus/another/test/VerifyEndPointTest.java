@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-apply plugin: 'java-library'
+package io.rogue.playground.quarkus.another.test;
 
-dependencies {
-    implementation project(':quarkus-sample-client-library')
-    implementation project(':quarkus-sample-another-library')
-    implementation 'io.quarkus:quarkus-rest-client'
-}
+import io.quarkus.test.junit.QuarkusTest;
+import io.rogue.playground.quarkus.another.AnotherEndPoint;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.junit.jupiter.api.Test;
 
-task hello() {
-    doLast {
-        Configuration cfg = project.configurations['compileClasspath']
-        Set<ResolvedArtifact> resolvedArtifacts = cfg.resolvedConfiguration.resolvedArtifacts
-        resolvedArtifacts.findAll { it.name == 'main' }
-                .each { a ->
-                    println a.name + ' : ' + a
-                }
+import javax.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@QuarkusTest
+public class VerifyEndPointTest {
+
+    @Inject
+    @RestClient
+    AnotherEndPoint client;
+
+    @Test
+    public void validateBeanInjection() {
+        assertNotNull(client, "Rest client injection isn't working as expected.");
     }
 }

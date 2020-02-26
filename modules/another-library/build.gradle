@@ -17,18 +17,5 @@
 apply plugin: 'java-library'
 
 dependencies {
-    implementation project(':quarkus-sample-client-library')
-    implementation project(':quarkus-sample-another-library')
     implementation 'io.quarkus:quarkus-rest-client'
-}
-
-task hello() {
-    doLast {
-        Configuration cfg = project.configurations['compileClasspath']
-        Set<ResolvedArtifact> resolvedArtifacts = cfg.resolvedConfiguration.resolvedArtifacts
-        resolvedArtifacts.findAll { it.name == 'main' }
-                .each { a ->
-                    println a.name + ' : ' + a
-                }
-    }
 }

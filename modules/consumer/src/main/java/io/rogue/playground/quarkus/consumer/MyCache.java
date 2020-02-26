@@ -16,6 +16,7 @@
 
 package io.rogue.playground.quarkus.consumer;
 
+import io.rogue.playground.quarkus.another.AnotherEndPoint;
 import io.rogue.playground.quarkus.client.MyEndPoint;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
@@ -29,7 +30,19 @@ public class MyCache {
     @RestClient
     MyEndPoint endPoint;
 
+    @Inject
+    @RestClient
+    AnotherEndPoint anotherEndPoint;
+
     public void doSomething() {
         endPoint.doSomething();
+    }
+
+    public MyEndPoint getEndPoint() {
+        return endPoint;
+    }
+
+    public AnotherEndPoint getAnotherEndPoint() {
+        return anotherEndPoint;
     }
 }
