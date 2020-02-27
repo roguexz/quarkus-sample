@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
+import java.net.URL;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
@@ -35,5 +37,8 @@ public class VerifyEndPointTest {
     @Test
     public void validateBeanInjection() {
         assertNotNull(client, "Rest client injection isn't working as expected.");
+        URL resource = Thread.currentThread().getContextClassLoader().getResource("META-INF/something.txt");
+        assertNotNull(resource, "Resource loading isn't working.");
+        System.err.println("Loaded resource: " + resource);
     }
 }

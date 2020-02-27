@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-apply plugin: 'java-library'
+package io.rogue.playground.quarkus.consumer;
 
-dependencies {
-    implementation project(':quarkus-sample-client-library')
-    implementation 'io.quarkus:quarkus-rest-client'
+// Dummy class needed to keep the Quarkus plugin happy
+public class Dummy {
 }

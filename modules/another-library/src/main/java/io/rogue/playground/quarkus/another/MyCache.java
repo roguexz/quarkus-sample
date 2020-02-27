@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package io.rogue.playground.quarkus.consumer;
+package io.rogue.playground.quarkus.another;
 
-import io.rogue.playground.quarkus.another.AnotherEndPoint;
 import io.rogue.playground.quarkus.client.MyEndPoint;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
