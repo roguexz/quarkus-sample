@@ -5,7 +5,14 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath "gradle.plugin.io.quarkus:quarkus-gradle-plugin:$VERSION_QUARKUS"
+        classpath "io.quarkus:io.quarkus.gradle.plugin:$VERSION_QUARKUS"
+    }
+}
+
+repositories {
+    repositories {
+        mavenLocal()
+        mavenCentral()
     }
 }
 
@@ -25,54 +32,34 @@ allprojects { Project it ->
     it.buildDir = file(rootDir.path + File.separator + 'tmp' + File.separator + rootProject.relativePath(projectDir))
 }
 
-subprojects { Project p ->
-    repositories {
-        repositories {
-            mavenLocal()
-            mavenCentral()
-            maven { url 'https://plugins.gradle.org/m2/' }
-        }
+apply plugin: 'java'
+apply plugin: 'io.quarkus'
+
+dependencies {
+
+    // Enforce the Quarkus BOM for various dependencies.
+    implementation enforcedPlatform(platform("io.quarkus:quarkus-bom:$VERSION_QUARKUS"))
+
+    implementation 'io.quarkus:quarkus-resteasy-jsonb'
+
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+}
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+test {
+    // Show standard streams on the console.
+    testLogging {
+        showStandardStreams = true
     }
 
-    apply plugin: 'java'
-    apply plugin: 'io.quarkus'
-
-    dependencies {
-
-        // Enforce the Quarkus BOM for various dependencies.
-        implementation enforcedPlatform(platform("io.quarkus:quarkus-bom:$VERSION_QUARKUS"))
-
-        implementation 'io.quarkus:quarkus-resteasy-jackson'
-        implementation 'org.jboss.resteasy:resteasy-core'
-        implementation 'io.quarkus:quarkus-undertow'
-
-        testImplementation 'io.quarkus:quarkus-arc'
-        testImplementation 'io.quarkus:quarkus-junit5'
-        testImplementation 'io.rest-assured:rest-assured'
-    }
-
-    compileJava {
-        options.compilerArgs << '-parameters'
-    }
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    p.tasks.withType(io.quarkus.gradle.tasks.QuarkusNative).each { Task t ->
-        t.onlyIf { false }
-    }
-    p.tasks.withType(io.quarkus.gradle.tasks.QuarkusTestNative).each { Task t ->
-        t.onlyIf { false }
-    }
-
-    test {
-        // Show standard streams on the console.
-        testLogging {
-            showStandardStreams = true
-        }
-
-        systemProperty 'quarkus.http.host', 'localhost'
-    }
+    systemProperty 'quarkus.http.host', 'localhost'
 }

@@ -14,5 +14,4 @@
 # limitations under the License.
 #
 
-#VERSION_QUARKUS=999-SNAPSHOT
-VERSION_QUARKUS=1.3.1.Final
+org.acme.OffsetDateTimeParser
