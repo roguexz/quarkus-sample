@@ -18,20 +18,29 @@ package org.acme.test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.acme.SimpleService;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
+//@io.quarkus.test.common.QuarkusTestResource(MockSSHServer.class)
+@org.junit.jupiter.api.extension.ExtendWith(MockSSHServer.class)
 public class SimpleServiceTest {
 
     @Inject
     SimpleService service;
 
+    @ConfigProperty(name = "mock.ssh.username", defaultValue = "not-set")
+    String username;
+
     @Test
     public void doNothing() {
+        System.err.println("Verifying the test case for mock user: " + username);
+        assertEquals("unit-test", username, "Test username does not match.");
         assertNotNull(service);
     }
 }

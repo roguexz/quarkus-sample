@@ -44,6 +44,8 @@ dependencies {
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'org.apache.sshd:sshd-scp:2.3.0'
+    testImplementation 'org.apache.sshd:sshd-sftp:2.3.0'
 }
 
 compileJava {
