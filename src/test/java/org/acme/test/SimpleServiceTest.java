@@ -27,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
-//@io.quarkus.test.common.QuarkusTestResource(MockSSHServer.class)
-@org.junit.jupiter.api.extension.ExtendWith(MockSSHServer.class)
+@io.quarkus.test.common.QuarkusTestResource(MockSSHServer.class)
+//@org.junit.jupiter.api.extension.ExtendWith(MockSSHServer.class)
 public class SimpleServiceTest {
 
     @Inject
