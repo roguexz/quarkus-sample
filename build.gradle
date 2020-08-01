@@ -110,5 +110,14 @@ test {
     testLogging {
         showStandardStreams = true
     }
+
+    SourceSet mainSS = project.sourceSets.main
+    String mainRelativePath = project.buildDir.relativePath(mainSS.output.classesDirs.singleFile)
+    String additionalMappings = project.sourceSets.findAll { ss -> ss != mainSS }
+            .collect { SourceSet ss ->
+                project.buildDir.relativePath(ss.output.classesDirs.singleFile) + ':' + mainRelativePath
+            }.join(',')
+    environment 'ADDITIONAL_TEST_TO_MAIN_MAPPINGS', additionalMappings
+
     systemProperty 'quarkus.http.host', 'localhost'
 }
