@@ -1,5 +1,5 @@
 # Quarkus Sample App
-This application is meant for showcasing bugs within the Quarkus releases.
+This application is meant as a reproducer for bugs within the Quarkus releases.
 
 ## Verifying Released Versions of Quarkus
 * In the [gradle.properties](gradle.properties) file, set the Quarkus version to the appropriate release value, e.g.,

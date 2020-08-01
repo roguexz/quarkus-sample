@@ -45,6 +45,7 @@ allprojects { Project it ->
 }
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
 apply plugin: 'io.quarkus'
 
 dependencies {
@@ -73,11 +74,41 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+sourceSets {
+    // Get the JaCoCo integration working for Quarkus tests
+    test.runtimeClasspath += configurations.jacocoAnt
+
+    // Functional Tests
+    functionalTest {
+        File srcDirectory
+        srcDirectory = file('src/funcTest/java')
+        if (srcDirectory.exists()) {
+            java.srcDir srcDirectory
+        }
+        srcDirectory = file('src/funcTest/resources')
+        if (srcDirectory.exists()) {
+            resources.srcDir srcDirectory
+        }
+
+        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath + configurations.compileOnly
+        runtimeClasspath += output + compileClasspath + configurations.jacocoAnt
+    }
+}
+
+/*
+ * Functional tests for this module.
+ */
+task functionalTest(type: Test, description: 'Functional tests', dependsOn: [processResources, classes]) {
+    description = 'Run the functional tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
+}
+
 test {
     // Show standard streams on the console.
     testLogging {
         showStandardStreams = true
     }
-
     systemProperty 'quarkus.http.host', 'localhost'
 }
