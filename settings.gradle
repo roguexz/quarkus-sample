@@ -3,7 +3,13 @@ rootProject.name = 'quarkus-sample'
 // Find the directories containing a "build.gradle" file in the modules directory
 /*
 ['modules'].each {
-    def subDirs = new File(rootDir, it).listFiles(new FileFilter() {
+    def searchDir = new File(rootDir, it)
+
+    if (!searchDir.exists()) {
+        return
+    }
+
+    def subDirs = searchDir.listFiles(new FileFilter() {
         boolean accept(File file) {
             if (!file.isDirectory()) {
                 return false

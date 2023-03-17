@@ -16,31 +16,35 @@
 
 package org.acme.test;
 
+import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.acme.SimpleService;
+import org.acme.DummyBean;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.net.URL;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-@io.quarkus.test.common.QuarkusTestResource(MockSSHServer.class)
-//@org.junit.jupiter.api.extension.ExtendWith(MockSSHServer.class)
-public class SimpleServiceTest {
+public class SimpleTest {
 
     @Inject
-    SimpleService service;
+    DummyBean bean;
 
     @ConfigProperty(name = "mock.ssh.username", defaultValue = "not-set")
-    String username;
+    Optional<String> username;
+
+    @TestHTTPResource("/")
+    URL serverListeningAt;
 
     @Test
     public void doNothing() {
-        System.err.println("Verifying the test case for mock user: " + username);
-        assertEquals("unit-test", username, "Test username does not match.");
-        assertNotNull(service);
+        System.err.println("Test server is running at: " + serverListeningAt);
+        assertTrue(username.isPresent(), "Config property was not injected.");
+        assertEquals("unit-test", username.get(), "Test username does not match.");
+        assertNotNull(bean);
     }
 }

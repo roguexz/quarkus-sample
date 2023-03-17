@@ -8,11 +8,7 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath("io.quarkus:io.quarkus.gradle.plugin:$VERSION_QUARKUS") {
-            if (VERSION_QUARKUS.endsWith("-SNAPSHOT")) {
-                changing true
-            }
-        }
+        classpath("io.quarkus:gradle-application-plugin:$VERSION_QUARKUS")
     }
 }
 
@@ -38,29 +34,25 @@ group = 'io.rogue.quarkus-test'
 //
 // ----------------------------------------------------
 
-allprojects { Project it ->
-    it.buildDir = file(rootDir.path + File.separator + 'tmp' + File.separator + rootProject.relativePath(projectDir))
-}
+buildDir = file(rootDir.path + File.separator + 'tmp' + File.separator + rootProject.relativePath(projectDir))
 
 apply plugin: 'java'
-apply plugin: 'jacoco'
 apply plugin: 'io.quarkus'
 
 dependencies {
 
     // Enforce the Quarkus BOM for various dependencies.
-    implementation enforcedPlatform(platform("io.quarkus:quarkus-bom:$VERSION_QUARKUS")) {
+    implementation platform("io.quarkus:quarkus-bom:$VERSION_QUARKUS") {
         if (VERSION_QUARKUS.endsWith("-SNAPSHOT")) {
             changing true
         }
     }
 
-    implementation 'io.quarkus:quarkus-resteasy-jsonb'
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-resteasy-jackson'
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
 
     testImplementation 'io.quarkus:quarkus-junit5'
-    testImplementation 'io.rest-assured:rest-assured'
-    testImplementation 'org.apache.sshd:sshd-scp:2.3.0'
-    testImplementation 'org.apache.sshd:sshd-sftp:2.3.0'
 }
 
 compileJava {
@@ -68,54 +60,16 @@ compileJava {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
-sourceSets {
-    // Get the JaCoCo integration working for Quarkus tests
-    test.runtimeClasspath += configurations.jacocoAnt
-
-    // Functional Tests
-    functionalTest {
-        File srcDirectory
-        srcDirectory = file('src/funcTest/java')
-        if (srcDirectory.exists()) {
-            java.srcDir srcDirectory
-        }
-        srcDirectory = file('src/funcTest/resources')
-        if (srcDirectory.exists()) {
-            resources.srcDir srcDirectory
-        }
-
-        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath + configurations.compileOnly
-        runtimeClasspath += output + compileClasspath + configurations.jacocoAnt
-    }
-}
-
-/*
- * Functional tests for this module.
- */
-task functionalTest(type: Test, description: 'Functional tests', dependsOn: [processResources, classes]) {
-    description = 'Run the functional tests.'
-    group = 'verification'
-    testClassesDirs = sourceSets.functionalTest.output.classesDirs
-    classpath = sourceSets.functionalTest.runtimeClasspath
-}
 
 test {
     // Show standard streams on the console.
     testLogging {
         showStandardStreams = true
     }
-
-    SourceSet mainSS = project.sourceSets.main
-    String mainRelativePath = project.buildDir.relativePath(mainSS.output.classesDirs.singleFile)
-    String additionalMappings = project.sourceSets.findAll { ss -> ss != mainSS }
-            .collect { SourceSet ss ->
-                project.buildDir.relativePath(ss.output.classesDirs.singleFile) + ':' + mainRelativePath
-            }.join(',')
-    environment 'ADDITIONAL_TEST_TO_MAIN_MAPPINGS', additionalMappings
-
+    // VPN issues at my place
     systemProperty 'quarkus.http.host', 'localhost'
 }
